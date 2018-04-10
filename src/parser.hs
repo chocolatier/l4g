@@ -54,3 +54,4 @@ enumItemNameParser = identifier lexer
 sortAliasParser = (symbol lexer "alias") >> return <$> sortNameParser 
 
 sortNameParser = symbol lexer "bool" <|> numSortNameParser <|> localSortNameParser
+
