@@ -25,7 +25,7 @@ homepage:            https://github.com/chocolatier/l4g
 license:             WTFPL
 
 -- The file containing the license text.
-license-file:        LICENSE
+license-file:        LICENCE
 
 -- The package author(s).
 author:              chocolatier
@@ -48,19 +48,24 @@ extra-source-files:  ChangeLog.md
 -- Constraint on the version of Cabal needed to build this package.
 cabal-version:       >=1.10
 
+library
+  default-language: Haskell2010
+  build-depends:   base >=4.10 && <4.11, parsec >= 3.1.11
+  exposed-modules: L4GParser
+  hs-source-dirs:  src
 
 executable l4g
   -- .hs or .lhs file containing the Main module.
   main-is:             Main.hs
   
   -- Modules included in this executable, other than Main.
-  -- other-modules:       
+  other-modules:       L4GParser
   
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:    
   
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.10 && <4.11
+  build-depends:       base >=4.10 && <4.11, l4g, parsec >= 3.1.11
   
   -- Directories containing source files.
   hs-source-dirs:      src
