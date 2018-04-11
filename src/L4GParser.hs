@@ -38,8 +38,10 @@ oneOfSymbol x = choice $ fmap (symbol lexer) x
 cardinalitySpecParser = do
     symbol lexer "cardinality"
     relation <- oneOfSymbol ["<", "=", "!=", ">"]
-    posint <- natural lexer -- TODO Fail if zero
-    return $ show (relation, posint)
+    posint <- natural lexer
+    if posint == 0 then 
+        fail "Cardinality must be greater than 0" 
+    else return $ show (relation, posint)
 
 sortSpecParser = cardinalitySpecListParser <|> enumerationParser <|> sortAliasParser 
 
