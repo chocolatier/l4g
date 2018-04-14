@@ -6,8 +6,8 @@ import Text.Parsec.Language
 
 l4gdef = emptyDef {
     commentLine = "%",
-    identStart = letter,
-    identLetter = alphaNum,
+    identStart = letter <|> char '_',
+    identLetter = alphaNum <|> char '_',
     caseSensitive = True
 }
 
@@ -17,7 +17,7 @@ sortsParser = many sortDeclarationParser
 
 sortDeclarationParser = numDeclarationParser <|> localSortDeclarationParser
 
-numDeclarationParser = do
+numDeclarationParser = try $ do
     name <- numSortNameParser 
     declaration <- cardinalitySpecListParser
     return (name, declaration)
@@ -49,6 +49,7 @@ enumerationParser = do
     symbol lexer "enum"
     colon lexer
     enumList <- sepBy1 enumItemNameParser (comma lexer)
+    symbol lexer "."
     return enumList
 
 enumItemNameParser = identifier lexer 
