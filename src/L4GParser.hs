@@ -121,3 +121,44 @@ functionSpecParser = (\x -> (x,"")) <$> oneOfSymbol ["all_different", "surjectiv
                         printParser = symbol lexer "print" >> try (colon lexer) >>  (\x -> ("print", show x)) <$> verbosityLevelParser
 
 verbosityLevelParser = oneOfSymbol ["none", "brief", "full"]
+
+constraintsParser = many clauseParser 
+
+clauseParser = do
+    ant <- option [] antParser 
+    cons <- consParser 
+    symbol lexer "."
+    return (ant,cos)
+
+antParser = sepBy1 (comma lexer) formulaParser >> symbol lexer "->"
+
+consParser = sepBy1 (semi lexer) formulaParser
+
+formulaParser = parens lexer formulaParser <|> constantParser <|> qfParser <|> fnfParser <|> ffnfparser <|> variableParser
+
+qfParser = do
+    q <- quantifierParser 
+    f <- formulaParser 
+    return $ show (q,f)
+
+quantifierParser = do 
+    q <- quantityIndicatorParser 
+    v <- variableParser
+    return (q,v)
+
+quantityIndicatorParser = oneOfSymbol ["ALL", "SOME"]
+    
+fnfParser = do
+    name <- functionNameParser
+    formulae <- sepBy1 (comma lexer) formulaParser 
+    return $ show (name, formulae)
+
+ffnfparser = try $ do 
+    formula1 <- formulaParser 
+    name <- functionNameParser
+    formula2 <- formulaParser
+    return $ show (formula1, name, formula2)
+    
+variableParser = identifier lexer
+
+
